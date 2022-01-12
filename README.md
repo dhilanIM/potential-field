@@ -1,3 +1,4 @@
 # Potential Field
 Path planning for mobile robot using Potential field approach
-[![Alternate Text]({image-url})]({https://youtu.be/Y4tXx4tYIGY} "Potential Field animation")
+
+<img src="https://github.com/dhilanIM/potential-field/potential-field.gif" width="640" alt="pot pic">
