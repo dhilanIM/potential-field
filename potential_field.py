@@ -1,5 +1,6 @@
 import matplotlib.pyplot as plt
 import numpy as np
+import time
 """
 
     Path planning for  mobile robot using Artificial Potential Field  approach with no sensors
@@ -8,10 +9,7 @@ import numpy as np
 
 class Robot:
     # Diferential Robot 
-    def __init__(self, r = 0.0975, l = 0.381*0.5 , D = 0.2, x = 0, y = 0) -> None:
-        self.wheel_radio = r
-        self.len_center2wheel = l
-        self.offset = D
+    def __init__(self, x = 0, y = 0) -> None:
         self.xcoord = x
         self.ycoord = y
 
@@ -38,8 +36,15 @@ class Obstacle:
         self.influence = influence          
         
     def draw_obstacle(self) -> None:
+        # Influence Radio
+        theta = np.linspace( 0 , 2 * np.pi , 150 )
+        rad = self.influence
+        a = rad * np.cos( theta ) + self.xcoord
+        b = rad * np.sin( theta ) + self.ycoord
+
         plt.figure("animation")
-        plt.plot(self.xcoord,self.ycoord,'ys', markersize = 15)
+        plt.plot(self.xcoord,self.ycoord,'ys', markersize = 15, )
+        plt.plot(a, b, 'g--', linewidth = 2, markersize = 5 )
 
 
 def get_atraction_force(k_att, x_goal, y_goal, x, y):
@@ -57,7 +62,6 @@ def get_repulsion_force(k_rep,phi,xo,yo,x,y):
 
 
 def main():
-
     # Goal position
     x_goal, y_goal = 3.5, 3.0 
 
@@ -78,8 +82,8 @@ def main():
     error = 99
 
     #Obstacle positions
-    obsts_x = [2.0, 4]
-    obsts_y = [2.5, 1]
+    obsts_x = [2.0, 1]
+    obsts_y = [2.5, 0]
 
     robot1 = Robot(x=x,y=y)
 
@@ -93,6 +97,7 @@ def main():
     itr = 0
     while error >= 0.001:
         robot1.draw_robot()
+        
     
         for idx in range(len(obstacles_list)):
             obstacles_list[idx].draw_obstacle()
@@ -102,11 +107,14 @@ def main():
         plt.figure("animation")
         plt.plot(x_goal,y_goal, 'rx', linewidth = 10)
 
-        plt.figure("position")
+        #plt.figure("position")
         # plt.plot(itr,robot1.xcoord)
         # plt.plot(itr, robot1.ycoord)
-        plt.pause(0.1)
+        plt.grid(True)
+        plt.pause(0.01)
         plt.ion()
+
+        if robot1.xcoord == 0 : time.sleep(2)
 
         force_x_att, force_y_att = get_atraction_force(k_att, x_goal, y_goal, robot1.xcoord, robot1.ycoord)
         
